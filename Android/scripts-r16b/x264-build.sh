@@ -34,7 +34,7 @@ delFile() {
   fi
 }
 
-function preBuild {
+preBuild() {
   echo "【$SOURCE_NAME】1. 准备..."
   delFile $SOURCE_PATH
   delFile $BUILD_LIB_PATH
@@ -54,12 +54,12 @@ function preBuild {
   fi
 }
 
-function postBuild {
+postBuild() {
   delFile $SOURCE_PATH
   delFile $BUILD_SCRATCH
 }
 
-function build_one { 
+build_one() { 
   mkdir -p "$BUILD_SCRATCH/$ARCH"
   cd "$BUILD_SCRATCH/$ARCH"
   # EXTRA_LDFLAGS="-arch $ARCH $EXTRA_LDFLAGS"

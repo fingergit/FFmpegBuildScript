@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 NDK=~/ffmpeg/packages/android-ndk-r16b
 API=21
 # HOST_PLATFORM=darwin-x86_64
@@ -22,7 +22,7 @@ DOWNLOAD_URL="https://downloads.sourceforge.net/opencore-amr/$SOURCE_NAME.$SOURC
 
 # 删除文件或文件夹
 delFile() {
-  if [ ! $1 ];then
+  if [[ ! $1 ]];then
     echo "参数不存在"
   elif [ ! -f $1 -a ! -d $1 ];then
     :
@@ -33,7 +33,7 @@ delFile() {
   fi
 }
 
-function preBuild {
+preBuild() {
   echo "【$SOURCE_NAME】1. 准备..."
   delFile $SOURCE_PATH
   delFile $BUILD_LIB_PATH
@@ -53,12 +53,12 @@ function preBuild {
   fi
 }
 
-function postBuild {
+postBuild() {
   delFile $SOURCE_PATH
   delFile $BUILD_SCRATCH
 }
 
-function build_one { 
+build_one() { 
 	mkdir -p "$BUILD_SCRATCH/$ARCH"
 	cd "$BUILD_SCRATCH/$ARCH"
 
@@ -103,7 +103,7 @@ preBuild
 
 # 如果aac版本为2.0.1
 echo "【$SOURCE_NAME】3. 修改代码内容..."
-if [ "$SOURCE_VER" == "2.0.1" ];then
+if [[ "$SOURCE_VER" == "2.0.1" ]];then
   sed -i "s/#include \"log\/log.h\"/\/\/#include \"log\/log.h\"/" $SOURCE_PATH/libSBRdec/src/lpp_tran.cpp
   sed -i "s/android_errorWriteLog/\/\/android_errorWriteLog/" $SOURCE_PATH/libSBRdec/src/lpp_tran.cpp
 fi
@@ -143,4 +143,4 @@ do
 done
 
 echo "【$SOURCE_NAME】5. 清除工作..."
-postBuild
+# postBuild

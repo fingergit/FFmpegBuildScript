@@ -1,10 +1,10 @@
 #!/bin/sh
 
 echo "Building fdk-aac..."
-sh fdkaac-build.sh
+bash fdkaac-build.sh
 
 echo "Building x264..."
-sh x264-build.sh
+bash x264-build.sh
 
 echo "Building ffmpeg..."
-sh ffmpeg-build-single.sh
+bash ffmpeg-build-single.sh

@@ -13,6 +13,19 @@ Build FFmpeg scripts for iOS and Android with x264 and fdk-aac.
 
 - Unzip `android-ndk-r10e-linux-x86_64.zip` or `android-ndk-r16b-linux-x86_64.zip` to `~/ffmpeg/packages/` folder.
 
+  ```text
+  $ sudo apt install unzip
+  $ sudo apt-get install make
+  $ sudo apt-get install build-essential
+  $ sudo apt-get install nasm
+  $ cd ~
+  $ mkdir ffmpeg
+  $ cd ffmpeg
+  $ mkdir packages
+  $ cd packages
+  $ wget https://dl.google.com/android/repository/android-ndk-r16b-linux-x86_64.zip
+  ```
+
 - Copy Android scripts to `~/ffmpeg`, Result:
 
   ```shell
@@ -26,7 +39,7 @@ Build FFmpeg scripts for iOS and Android with x264 and fdk-aac.
        |_ x264-build.sh
   ```
 
-  - Run: `sh full-build.sh`
+  - Run: `bash full-build.sh`
   
 ## Build for iOS
 
