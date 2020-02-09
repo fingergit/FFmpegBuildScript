@@ -28,3 +28,7 @@ Build FFmpeg scripts for iOS and Android with x264 and fdk-aac.
 
   - Run: `sh full-build.sh`
   
+## Build for iOS
+
+- Go to `iOS/scripts` folder.
+- Run `sh full-build.sh`.

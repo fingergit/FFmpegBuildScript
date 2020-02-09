@@ -18,6 +18,7 @@ BUILD_THIN_PATH="thin"
 
 BUILD_X264_FILE="x264-autobuild.sh"
 BUILD_AAC_FILE="fdk-aac-autobuild.sh"
+CWD=`pwd`
 
 # 删除文件或文件夹
 delFile() {
@@ -34,12 +35,12 @@ delFile() {
 
 # 清除编译内容
 doClean() {
-	# delFile $SRC_NAME
-	# delFile $SRC_RENAME
-	delFile $BUILD_NAME
-	# delFile $BUILD_SCRATCH_PATH
-	delFile $BUILD_THIN_PATH
-	delFile $BUILD_FILE
+	delFile "$CWD/$SRC_NAME"
+	# delFile "$CWD/$SRC_RENAME"
+	delFile "$CWD/$BUILD_NAME"
+	delFile "$CWD/$BUILD_SCRATCH_PATH"
+	delFile "$CWD/$BUILD_THIN_PATH"
+	delFile "$CWD/$BUILD_FILE"
 }
 
 # 在编译前的准备工作
@@ -52,8 +53,12 @@ preBuild() {
 	fi
 
 	doClean
-	delFile $BUILD_FAT_PATH
-	delFile $BUILD_SCRATCH_PATH
+	delFile "$CWD/$BUILD_FAT_PATH"
+	
+	if [[ ! -f $CWD/$BUILD_ZIP ]]; then
+		echo "downloading $BUILD_ZIP"
+		curl -o $BUILD_ZIP -O "https://codeload.github.com/fingergit/FFmpeg-iOS-build-script/zip/master"
+	fi
 }
 
 postBuild() {

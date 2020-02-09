@@ -21,9 +21,9 @@ delFile() {
 	if [ ! $1 ];then
 		echo "参数不存在"
 	elif [ ! -f $1 -a ! -d $1 ];then
-		echo "文件不存在"
+		:
 	elif [ "$1" == "/" -o "$1" == "" ];then	
-		echo "无效文件夹"
+		:
 	else
 		rm -rf $1
 	fi
@@ -43,6 +43,15 @@ doClean() {
 preBuild() {
 	doClean
 	delFile $BUILD_FAT_PATH
+
+	if [[ ! -f $CWD/$SRC_ZIP ]]; then
+		echo "downloading $SRC_ZIP"
+		curl -O "https://code.videolan.org/videolan/x264/-/archive/stable/$SRC_ZIP"
+	fi
+	if [[ ! -f $CWD/$BUILD_ZIP ]]; then
+		echo "downloading $BUILD_ZIP"
+		curl -o $BUILD_ZIP -O "https://codeload.github.com/fingergit/x264-ios/zip/master"
+	fi
 }
 
 postBuild() {

@@ -15,15 +15,16 @@ BUILD_FAT_PATH="fdk-aac-ios"
 # 中间编译的临时文件路径
 BUILD_SCRATCH_PATH="scratch"
 BUILD_THIN_PATH="thin"
+CWD=`pwd`
 
 # 删除文件或文件夹
 delFile() {
 	if [ ! $1 ];then
 		echo "参数不存在"
 	elif [ ! -f $1 -a ! -d $1 ];then
-		echo "文件不存在"
+		:
 	elif [ "$1" == "/" -o "$1" == "" ];then	
-		echo "无效文件夹"
+		:
 	else
 		rm -rf $1
 	fi
@@ -31,18 +32,27 @@ delFile() {
 
 # 清除编译内容
 doClean() {
-	delFile $SRC_NAME
-	delFile $SRC_RENAME
-	delFile $BUILD_NAME
-	delFile $BUILD_SCRATCH_PATH
-	delFile $BUILD_THIN_PATH
-	delFile $BUILD_FILE
+	delFile "$CWD/$SRC_NAME"
+	delFile "$CWD/$SRC_RENAME"
+	delFile "$CWD/$BUILD_NAME"
+	delFile "$CWD/$BUILD_SCRATCH_PATH"
+	delFile "$CWD/$BUILD_THIN_PATH"
+	delFile "$CWD/$BUILD_FILE"
 }
 
 # 在编译前的准备工作
 preBuild() {
 	doClean
-	delFile $BUILD_FAT_PATH
+	delFile "$CWD/$BUILD_FAT_PATH"
+
+	if [[ ! -f $CWD/$SRC_ZIP ]]; then
+		echo "downloading $SRC_ZIP"
+		curl -O "https://nchc.dl.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-2.0.1.tar.gz"
+	fi
+	if [[ ! -f $CWD/$BUILD_ZIP ]]; then
+		echo "downloading $BUILD_ZIP"
+		curl -o $BUILD_ZIP -O "https://codeload.github.com/fingergit/fdk-aac-build-script-for-iOS/zip/master"
+	fi
 }
 
 postBuild() {
