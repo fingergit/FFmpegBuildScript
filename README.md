@@ -40,8 +40,15 @@ Build FFmpeg scripts for iOS and Android with x264 and fdk-aac.
   ```
 
   - Run: `bash full-build.sh`
-  
+
 ## Build for iOS
 
 - Go to `iOS/scripts` folder.
 - Run `sh full-build.sh`.
+
+## Issues
+
+- For Android x86, "libffmpeg.so has text relocations"
+  
+  Set `--disable-asm` for x264、fdk-aac and android configure.
+  

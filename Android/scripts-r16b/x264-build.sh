@@ -96,11 +96,11 @@ build_one() {
     --host=$HOST \
     --enable-static \
     --enable-pic \
-    --enable-asm \
     --enable-thread \
     --enable-strip \
     --extra-cflags="$EXTRA_CFLAGS -Os -fPIC -D__ANDROID_API__=$API -I$NDK/sysroot/usr/include" \
     --extra-ldflags="-L$SYSROOT/usr/lib $EXTRA_LDFLAGS" \
+    $EXTRA_ENABLE_DISABLE \
     $ADDITIONAL_CONFIGURE_FLAG
 
 
@@ -126,6 +126,7 @@ do
                EXTRA_CFLAGS="-march=armv7-a  -mfloat-abi=softfp -mfpu=neon -I$NDK/sysroot/usr/include/arm-linux-androideabi -marm"
                EXTRA_LDFLAGS="-marm"
                # EXTRA_LDFLAGS=""
+               EXTRA_ENABLE_DISABLE="--enable-asm"
                HOST=arm-linux
                build_one
           ;;
@@ -136,6 +137,7 @@ do
                # EXTRA_CFLAGS="-D__ANDROID_API__=$API -isysroot $NDK/sysroot -I$NDK/sysroot/usr/include/aarch64-linux-android -Os -fPIC"
                EXTRA_CFLAGS="-I$NDK/sysroot/usr/include/aarch64-linux-android"
                EXTRA_LDFLAGS=""
+               EXTRA_ENABLE_DISABLE="--enable-asm"
                HOST=aarch64-linux
                build_one
           ;;
@@ -145,6 +147,7 @@ do
                SYSROOT=$NDK/platforms/android-$API/arch-x86/
                EXTRA_CFLAGS="-I$NDK/sysroot/usr/include/i686-linux-android"
                EXTRA_LDFLAGS=""
+               EXTRA_ENABLE_DISABLE="--disable-asm"
                HOST=i686-linux
                build_one
           ;;

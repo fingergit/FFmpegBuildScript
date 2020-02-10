@@ -6,7 +6,7 @@ API=21
 HOST_PLATFORM=linux-x86_64
 
 ARCHS="armeabi-v7a arm64-v8a x86"
-# ARCHS="armeabi-v7a"
+# ARCHS="x86"
 
 CWD=`pwd`
 BUILD_SCRATCH=$CWD/"scratch-ffmpeg"
@@ -144,18 +144,18 @@ configure()
     --nm=$NM \
     --extra-libs=-ldl \
     --extra-libs=-lgcc \
-    --disable-everything \
-    --disable-encoders \
-    --disable-decoders \
-    --disable-avdevice \
-    --enable-static \
     --disable-doc \
     --disable-ffplay \
     --disable-network \
     --disable-doc \
+    --enable-ffmpeg \
     --disable-symver \
-    --enable-neon \
+    --disable-encoders \
+    --disable-decoders \
+    --disable-avdevice \
+    --enable-static \
     --disable-shared \
+    --enable-neon \
     --enable-libx264 \
     --enable-libfdk-aac \
     --enable-gpl \
@@ -165,37 +165,22 @@ configure()
     --enable-pthreads \
     --enable-mediacodec \
     --enable-encoder=aac \
-    --enable-encoder=gif \
-    --enable-encoder=libopenjpeg \
     --enable-encoder=libmp3lame \
     --enable-encoder=libwavpack \
     --enable-encoder=libx264 \
     --enable-encoder=mpeg4 \
     --enable-encoder=pcm_s16le \
-    --enable-encoder=png \
-    --enable-encoder=srt \
-    --enable-encoder=subrip \
-    --enable-encoder=yuv4 \
     --enable-encoder=text \
     --enable-decoder=aac \
     --enable-decoder=aac_latm \
-    --enable-decoder=libopenjpeg \
     --enable-decoder=mp3 \
     --enable-decoder=mpeg4_mediacodec \
     --enable-decoder=pcm_s16le \
-    --enable-decoder=flac \
-    --enable-decoder=flv \
-    --enable-decoder=gif \
-    --enable-decoder=png \
-    --enable-decoder=srt \
-    --enable-decoder=xsub \
-    --enable-decoder=yuv4 \
     --enable-decoder=vp8_mediacodec \
     --enable-decoder=h264_mediacodec \
     --enable-decoder=hevc_mediacodec \
     --enable-hwaccel=h264_mediacodec \
     --enable-hwaccel=mpeg4_mediacodec \
-    --enable-ffmpeg \
     --enable-bsf=aac_adtstoasc \
     --enable-bsf=h264_mp4toannexb \
     --enable-bsf=hevc_mp4toannexb \
