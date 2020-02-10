@@ -99,7 +99,7 @@ build_one() {
     --enable-asm \
     --enable-thread \
     --enable-strip \
-    --extra-cflags="$EXTRA_CFLAGS -Os -fpic -D__ANDROID_API__=$API -I$NDK/sysroot/usr/include" \
+    --extra-cflags="$EXTRA_CFLAGS -Os -fPIC -D__ANDROID_API__=$API -I$NDK/sysroot/usr/include" \
     --extra-ldflags="-L$SYSROOT/usr/lib $EXTRA_LDFLAGS" \
     $ADDITIONAL_CONFIGURE_FLAG
 

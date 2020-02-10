@@ -83,6 +83,7 @@ configure()
     ARCH2=""
     CC=""
     NM=""
+    EXTRA_ENABLE_DISABLE=""
     echo "x264 lib: $x264"
     echo "fdk-aac lib: $fdkaac"
     if [ "$CPU" == "armeabi-v7a" ]
@@ -119,6 +120,8 @@ configure()
         EXTRA_LDFLAGS="-lm"
         CC=${CROSS_PREFIX}gcc
         NM=${CROSS_PREFIX}nm
+        # for x86: libffmpeg.so has text relocations
+        EXTRA_ENABLE_DISABLE="--disable-asm"
     fi
 
     mkdir -p "$BUILD_SCRATCH/$ARCH"
@@ -135,7 +138,7 @@ configure()
     --enable-cross-compile \
     --enable-jni \
     --sysroot=$SYSROOT \
-    --extra-cflags="$EXTRA_CFLAGS -Os -fpic -D__ANDROID_API__=$API -I$NDK/sysroot/usr/include -I$x264/include -I$fdkaac/include" \
+    --extra-cflags="$EXTRA_CFLAGS -Os -fPIC -D__ANDROID_API__=$API -I$NDK/sysroot/usr/include -I$x264/include -I$fdkaac/include" \
     --extra-ldflags=" $EXTRA_LDFLAGS -L$x264/lib -L$fdkaac/lib" \
     --cc=$CC \
     --nm=$NM \
@@ -197,6 +200,7 @@ configure()
     --enable-bsf=h264_mp4toannexb \
     --enable-bsf=hevc_mp4toannexb \
     --enable-bsf=mpeg4_unpack_bframes \
+    $EXTRA_ENABLE_DISABLE \
     $ADDITIONAL_CONFIGURE_FLAG
 }
 
