@@ -149,10 +149,11 @@ configure()
     --disable-network \
     --disable-doc \
     --enable-ffmpeg \
+    --enable-avresample \
     --disable-symver \
     --disable-encoders \
     --disable-decoders \
-    --disable-avdevice \
+    --enable-avdevice \
     --enable-static \
     --disable-shared \
     --enable-neon \
@@ -214,6 +215,8 @@ build()
     $PREFIX/lib/libavcodec.a \
     $PREFIX/lib/libavfilter.a \
     $PREFIX/lib/libavformat.a \
+    $PREFIX/lib/libavdevice.a \
+    $PREFIX/lib/libavresample.a \
     $PREFIX/lib/libavutil.a \
     $PREFIX/lib/libpostproc.a \
     $PREFIX/lib/libswresample.a \
@@ -225,10 +228,85 @@ build()
 
 preBuild
 echo "【$SOURCE_NAME】3. 编译以下 架构"
-for ARCH in $ARCHS
+FIRST_ARCH=""
+BUILD_LIB_ALL_PATH="$BUILD_LIB_PATH/all"
+for _ARCH in $ARCHS
 do
-    build $ARCH
+    if [[ "$FIRST_ARCH" == "" ]]; then
+        FIRST_ARCH=$_ARCH
+    fi
+    build $_ARCH
+    mkdir -p $BUILD_LIB_ALL_PATH/lib/$_ARCH
+    cp -af $BUILD_LIB_PATH/$_ARCH/libffmpeg.so $BUILD_LIB_ALL_PATH/lib/$_ARCH/
 done
+
+# 保存fftools
+# libs
+#  |_ ffmpeg
+#       |_ include
+#            |_ compat
+#            |_ libavcodec
+#            |_ ...
+#       |_ lib
+#       |    |_ armeabi-v7a
+#       |         |_ libffmpeg.so
+#       |    |_ ...
+#       |_ fftools
+#            |_ config.h
+#            |_ ffmpeg.c
+#            
+echo "拷贝fftools"
+cp -af $BUILD_LIB_PATH/$FIRST_ARCH/include $BUILD_LIB_ALL_PATH/include
+cp -af $SOURCE_PATH/fftools $BUILD_LIB_ALL_PATH/fftools
+
+if [[ -f "$BUILD_SCRATCH/aarch64/config.h" ]]; then
+    cp -af $BUILD_SCRATCH/aarch64/config.h $BUILD_LIB_ALL_PATH/fftools/
+elif [[ -f "$BUILD_SCRATCH/arm/config.h" ]]; then
+    cp -af $BUILD_SCRATCH/arm/config.h $BUILD_LIB_ALL_PATH/fftools/
+elif [[ -f "$BUILD_SCRATCH/x86/config.h" ]]; then
+    cp -af $BUILD_SCRATCH/x86/config.h $BUILD_LIB_ALL_PATH/fftools/
+fi
+if [ ! -d "$BUILD_LIB_ALL_PATH/include/compat" ]; then
+	mkdir -p $BUILD_LIB_ALL_PATH/include/compat
+fi
+cp -af $SOURCE_PATH/compat/va_copy.h $BUILD_LIB_ALL_PATH/include/compat/
+cp -af $SOURCE_PATH/libavutil/libm.h $BUILD_LIB_ALL_PATH/include/libavutil/
+cp -af $SOURCE_PATH/libavutil/thread.h $BUILD_LIB_ALL_PATH/include/libavutil/
+cp -af $SOURCE_PATH/libavutil/internal.h $BUILD_LIB_ALL_PATH/include/libavutil/
+cp -af $SOURCE_PATH/libavutil/timer.h $BUILD_LIB_ALL_PATH/include/libavutil/
+if [ ! -d "$BUILD_LIB_ALL_PATH/include/libavutil/aarch64" ]; then
+	mkdir $BUILD_LIB_ALL_PATH/include/libavutil/aarch64
+fi
+cp -af $SOURCE_PATH/libavutil/aarch64/timer.h $BUILD_LIB_ALL_PATH/include/libavutil/aarch64/
+if [ ! -d "$BUILD_LIB_ALL_PATH/include/libavutil/arm" ]; then
+	mkdir $BUILD_LIB_ALL_PATH/include/libavutil/arm
+fi
+cp -af $SOURCE_PATH/libavutil/arm/timer.h $BUILD_LIB_ALL_PATH/include/libavutil/arm/
+if [ ! -d "$BUILD_LIB_ALL_PATH/include/libavutil/x86" ]; then
+	mkdir $BUILD_LIB_ALL_PATH/include/libavutil/x86
+fi
+cp -af $SOURCE_PATH/libavutil/x86/timer.h $BUILD_LIB_ALL_PATH/include/libavutil/x86/
+cp -af $SOURCE_PATH/libavcodec/mathops.h $BUILD_LIB_ALL_PATH/include/libavcodec/
+cp -af $SOURCE_PATH/libavutil/reverse.h $BUILD_LIB_ALL_PATH/include/libavutil/
+cp -af $SOURCE_PATH/libavformat/os_support.h $BUILD_LIB_ALL_PATH/include/libavformat/
+cp -af $SOURCE_PATH/libavformat/network.h $BUILD_LIB_ALL_PATH/include/libavformat/
+cp -af $SOURCE_PATH/libavformat/url.h $BUILD_LIB_ALL_PATH/include/libavformat/
+
+# replace variable "class" in fftools/cmdutils.c
+CMD_UTILS_C="$BUILD_LIB_ALL_PATH/fftools/cmdutils.c"
+CMD_UTILS_H="$BUILD_LIB_ALL_PATH/fftools/cmdutils.h"
+sed -i "s/class, int flags/_class, int flags/" $CMD_UTILS_C
+sed -i "s/class->option/_class->option/" $CMD_UTILS_C
+sed -i "s/class, NULL, flags/_class, NULL, flags/" $CMD_UTILS_C
+sed -i "s/(class, child)/(_class, child)/" $CMD_UTILS_C
+sed -i "s/class, int flags/_class, int flags/" $CMD_UTILS_H
+sed -i "s/\"0x%\"PRIx64/\"0x%\" PRIx64/" $CMD_UTILS_H
+
+FFMPEG_C="$BUILD_LIB_ALL_PATH/fftools/ffmpeg.c"
+FFMPEG_H="$BUILD_LIB_ALL_PATH/fftools/ffmpeg.h"
+sed -i "s/main(int argc/ffmpeg_main(int argc/" $FFMPEG_C
+sed -i "667aint ffmpeg_main(int argc, char **argv);" $FFMPEG_H
+
 
 echo "【$SOURCE_NAME】4. 清除工作..."
 postBuild
