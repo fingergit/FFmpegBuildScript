@@ -95,10 +95,21 @@ FDK_AAC=`pwd`/fdk-aac-ios
 # CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-avresample"\
 # \
 # ' $BUILD_FILE
+
+# sed -i '' '23a\
+# CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-decoders --enable-decoder=h264 --enable-decoder=aac --enable-decoder=mpeg4 --enable-decoder=hevc --enable-decoder=mp3"\
+# CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-encoders --enable-encoder=aac --enable-encoder=libx264 --enable-encoder=mpeg4"\
+# CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-avresample --enable-small"\
+# \
+# ' $BUILD_FILE
+
 sed -i '' '23a\
-CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-decoders --enable-decoder=h264 --enable-decoder=aac --enable-decoder=mpeg4 --enable-decoder=hevc --enable-decoder=mp3"\
-CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-encoders --enable-encoder=aac --enable-encoder=h264 --enable-encoder=mpeg4"\
-CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-avresample --enable-small"\
+CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-decoders --enable-decoder=h264 --enable-decoder=aac --enable-decoder=mpeg4 --enable-decoder=hevc"\
+CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-decoder=aac_latm --enable-decoder=mp3 --enable-decoder=mpeg4_mediacodec --enable-decoder=pcm_s16le --enable-decoder=vp8_mediacodec"\
+CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-decoder=h264_mediacodec --enable-decoder=hevc_mediacodec --enable-hwaccel=h264_mediacodec --enable-hwaccel=mpeg4_mediacodec"\
+CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-encoders --enable-encoder=aac --enable-encoder=libmp3lame --enable-encoder=libwavpack --enable-encoder=libx264"\
+CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-encoder=mpeg4 --enable-encoder=h264 --enable-encoder=pcm_s16le --enable-encoder=text"\
+CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-avresample --enable-small --enable-neon"\
 \
 ' $BUILD_FILE
 

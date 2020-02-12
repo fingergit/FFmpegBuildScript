@@ -156,6 +156,7 @@ configure()
     --enable-avdevice \
     --enable-static \
     --disable-shared \
+    --enable-small \
     --enable-neon \
     --enable-libx264 \
     --enable-libfdk-aac \
@@ -170,9 +171,14 @@ configure()
     --enable-encoder=libwavpack \
     --enable-encoder=libx264 \
     --enable-encoder=mpeg4 \
+    --enable-encoder=h264 \
+    --enable-encoder=mpeg4 \
     --enable-encoder=pcm_s16le \
     --enable-encoder=text \
     --enable-decoder=aac \
+    --enable-decoder=h264 \
+    --enable-decoder=mpeg4 \
+    --enable-decoder=hevc \
     --enable-decoder=aac_latm \
     --enable-decoder=mp3 \
     --enable-decoder=mpeg4_mediacodec \
